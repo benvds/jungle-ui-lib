@@ -17,13 +17,34 @@ module.exports = webpackEnv => {
     devServer: {
       contentBase: "./dist"
     },
-    entry: "./src/index.js",
+    entry: "./src/index.ts",
+    resolve: {
+      extensions: [".js", ".ts"]
+    },
     output: {
       path: path.resolve(__dirname, "dist"),
       filename: "jungle-ui-lib.js",
       library: "jungleUiLib",
       libraryTarget: "umd"
     },
-    plugins: [new CleanWebpackPlugin()]
+    plugins: [new CleanWebpackPlugin()],
+    module: {
+      rules: [
+        {
+          test: /\.ts$/,
+          exclude: /node_modules/,
+          use: [
+            {
+              loader: "ts-loader"
+            }
+          ]
+        },
+        {
+          enforce: "pre",
+          test: /\.js$/,
+          loader: "source-map-loader"
+        }
+      ]
+    }
   };
 };
