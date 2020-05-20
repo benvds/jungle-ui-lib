@@ -1,5 +1,7 @@
 const path = require("path");
+const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+var DeclarationBundlerPlugin = require("declaration-bundler-webpack-plugin");
 
 module.exports = webpackEnv => {
   const isEnvProduction = webpackEnv === "production";
@@ -17,9 +19,9 @@ module.exports = webpackEnv => {
     devServer: {
       contentBase: "./dist"
     },
-    entry: "./src/index.ts",
+    entry: "./src/index.tsx",
     resolve: {
-      extensions: [".js", ".ts"]
+      extensions: [".js", ".jsx", ".ts", ".tsx"]
     },
     output: {
       path: path.resolve(__dirname, "dist"),
@@ -27,24 +29,35 @@ module.exports = webpackEnv => {
       library: "jungleUiLib",
       libraryTarget: "umd"
     },
-    plugins: [new CleanWebpackPlugin()],
+    plugins: [
+      new CleanWebpackPlugin(),
+      new webpack.WatchIgnorePlugin([/\.js$/, /\.d\.ts$/]),
+      new DeclarationBundlerPlugin({
+        moduleName: "jungleUiLib",
+        out: "./index.d.ts"
+      })
+    ],
     module: {
       rules: [
         {
-          test: /\.ts$/,
+          test: /\.tsx?$/,
           exclude: /node_modules/,
           use: [
             {
               loader: "ts-loader"
             }
           ]
-        },
+        } /*,
         {
           enforce: "pre",
-          test: /\.js$/,
+          test: /\.jsx?$/,
           loader: "source-map-loader"
-        }
+        }*/
       ]
+    },
+    externals: {
+      react: "React",
+      "react-dom": "ReactDOM"
     }
   };
 };
