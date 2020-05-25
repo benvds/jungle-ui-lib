@@ -1,7 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-var DeclarationBundlerPlugin = require("declaration-bundler-webpack-plugin");
+const TypingsBundlerPlugin = require("typings-bundler-plugin");
 
 module.exports = webpackEnv => {
   const isEnvProduction = webpackEnv === "production";
@@ -32,9 +32,8 @@ module.exports = webpackEnv => {
     plugins: [
       new CleanWebpackPlugin(),
       new webpack.WatchIgnorePlugin([/\.js$/, /\.d\.ts$/]),
-      new DeclarationBundlerPlugin({
-        moduleName: "jungleUiLib",
-        out: "./index.d.ts"
+      new TypingsBundlerPlugin({
+        out: "index.d.ts"
       })
     ],
     module: {
