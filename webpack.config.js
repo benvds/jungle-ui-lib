@@ -16,9 +16,6 @@ module.exports = webpackEnv => {
         ? "source-map"
         : false
       : isEnvDevelopment && "cheap-module-source-map",
-    devServer: {
-      contentBase: "./dist"
-    },
     entry: "./src/index.tsx",
     resolve: {
       extensions: [".js", ".jsx", ".ts", ".tsx"]
@@ -46,12 +43,7 @@ module.exports = webpackEnv => {
               loader: "ts-loader"
             }
           ]
-        } /*,
-        {
-          enforce: "pre",
-          test: /\.jsx?$/,
-          loader: "source-map-loader"
-        }*/
+        }
       ]
     },
     externals: {
