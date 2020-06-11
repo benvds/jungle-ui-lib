@@ -1,0 +1,5 @@
+.version-view {
+  padding: 15px 15px 15px 30px;
+  background: #eee url('./git-commit.svg') no-repeat 15px center;
+  /* font-weight: bold; */
+}

@@ -2,6 +2,9 @@ const path = require("path");
 const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TypingsBundlerPlugin = require("typings-bundler-plugin");
+// const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const ExtractCssChunks = require("extract-css-chunks-webpack-plugin");
+const { CheckerPlugin } = require("awesome-typescript-loader");
 
 module.exports = webpackEnv => {
   const isEnvProduction = webpackEnv === "production";
@@ -27,22 +30,45 @@ module.exports = webpackEnv => {
       libraryTarget: "umd"
     },
     plugins: [
-      new CleanWebpackPlugin(),
-      new webpack.WatchIgnorePlugin([/\.js$/, /\.d\.ts$/]),
-      new TypingsBundlerPlugin({
-        out: "index.d.ts"
-      })
+      // Does not work
+      new CleanWebpackPlugin({
+        cleanStaleWebpackAssets: false
+        // cleanAfterEveryBuildPatterns: ["!*.png", "!*.svg"]
+      }),
+      new CheckerPlugin(),
+      // new webpack.WatchIgnorePlugin([/\.js$/, /\.d\.ts$/]),
+      // new TypingsBundlerPlugin({
+      //   out: "index.d.ts"
+      // }),
+      new ExtractCssChunks()
     ],
     module: {
       rules: [
         {
-          test: /\.tsx?$/,
-          exclude: /node_modules/,
+          test: /\.(png|svg)$/,
+          use: ["file-loader"]
+        },
+        {
+          test: /\.css$/i,
           use: [
             {
-              loader: "ts-loader"
-            }
+              loader: ExtractCssChunks.loader,
+              options: {
+                esModule: true,
+                hmr: isEnvDevelopment
+              }
+            },
+            "css-loader"
           ]
+        },
+        {
+          test: /\.js$/,
+          use: ["babel-loader", "source-map-loader"],
+          exclude: /node_modules/
+        },
+        {
+          test: /\.tsx?$/,
+          use: ["babel-loader", "awesome-typescript-loader"]
         }
       ]
     },

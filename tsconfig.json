@@ -1,12 +1,24 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
+    "strict": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "noEmit": true,
     "sourceMap": true,
     "noImplicitAny": true,
     "module": "es6",
-    "target": "es5",
+    "moduleResolution": "node",
+    "target": "esnext",
     "allowJs": true,
     "declaration": true,
     "jsx": "react"
+  },
+  "include": [
+    "src"
+  ],
+  "awesomeTypescriptLoaderOptions": {
+    "reportFiles": [
+      "./src/**/*.{ts,tsx}"
+    ]
   }
 }
